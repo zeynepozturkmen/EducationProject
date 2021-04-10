@@ -2,6 +2,7 @@
 using EducationProject.Core.Entities;
 using EducationProject.Data.DbContexts;
 using EducationProject.Service.IService;
+using EducationProject.Service.IUnitOfWorks;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

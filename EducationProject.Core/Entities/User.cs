@@ -15,5 +15,7 @@ namespace EducationProject.Core.Entities
         public string Address { get; set; }
         public string Tc { get; set; }
         public string FullName { get; set; }
+
+        public virtual List<UserEducation> UserEducationList { get; set; } = new List<UserEducation>();
     }
 }

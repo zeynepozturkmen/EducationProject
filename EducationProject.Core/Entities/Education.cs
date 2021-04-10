@@ -16,5 +16,6 @@ namespace EducationProject.Core.Entities
         public Guid EducationInformationId { get; set; }
         public TeacherInformation EducationInformation { get; set; }
         public virtual List<EducationContent> EducationContentList { get; set; } = new List<EducationContent>();
+        public virtual List<UserEducation> UserEducationList { get; set; } = new List<UserEducation>();
     }
 }

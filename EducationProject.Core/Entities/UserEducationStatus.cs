@@ -11,7 +11,7 @@ namespace EducationProject.Core.Entities
             description = Description;
         }
         public string Description { get; set; }
-        public virtual List<UserEductaion> UserEductaionList { get; set; } = new List<UserEductaion>();
+        public virtual List<UserEducation> UserEducationList { get; set; } = new List<UserEducation>();
 
     }
 }

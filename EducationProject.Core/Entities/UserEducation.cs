@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EducationProject.Core.Entities
 {
-    public class UserEductaion : BaseEntity
+    public class UserEducation : BaseEntity
     {
         public Guid UserId { get; set; }
         public User User { get; set; }
