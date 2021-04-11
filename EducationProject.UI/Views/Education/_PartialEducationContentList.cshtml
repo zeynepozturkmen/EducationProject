@@ -1,0 +1,70 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
+
+<script type="text/javascript" src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+<style>
+
+    input,
+    label {
+        margin: .4rem 0;
+    }
+</style>
+
+
+
+@model IEnumerable<EducationProject.Contract.ResponseModel.Education.EducationContentResponseModel>
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th>Education Content Type</th>
+            <th>File</th>
+            <th>Row number</th>
+            <th>Transactions</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (Model != null && Model != null)
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.EducationContenType
+                    </td>
+                    <td>
+                        @item.FilePath
+                    </td>
+                    <td>
+                        @item.RowNumber
+                    </td>
+
+                    <td>
+                   
+                    </td>
+
+                </tr>
+            }
+        }
+
+
+    </tbody>
+</table>
+
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+
+</script>

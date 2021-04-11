@@ -1,0 +1,58 @@
+﻿
+@{
+//ViewData["Title"] = "Index";
+}
+
+
+@model IEnumerable<EducationProject.Contract.ResponseModel.Education.EducationResponseModel>
+
+
+@if (ViewBag.Message != null)
+{
+    <h1>@ViewBag.Message</h1>
+}
+
+<a href="/Education/Addeducation" class="btn btn-success float-right">Create Education</a>
+
+<h3>Education List</h3>
+<br />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Time</th>
+            <th scope="col">Quota</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Transaction</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Time</td>
+            <td>@item.Quota</td>
+            <td>@item.Cost</td>
+            <td>@item.CategoryName</td>
+
+            <td>
+                <a class="btn btn-warning" href="/Education/ByIdEducation?Id=@item.Id">Detail</a>
+                <a href="#" class="deleteDriver btn btn-danger " data-id="@item.Id"><i class="fas fa-trash-alt"></i> Delete</a>
+             
+            </td>
+        </tr>
+            }
+        }
+
+
+    </tbody>
+</table>
+
+
+<script src="~/CustomScripts/Education/DeleteEducationScript.js"></script>
+

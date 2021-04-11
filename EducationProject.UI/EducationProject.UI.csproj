@@ -5,16 +5,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.5.3" />
+    <PackageReference Include="FormHelper" Version="3.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
   </ItemGroup>
 
   
   <ItemGroup>
+    <ProjectReference Include="..\EducationProject.Contract\EducationProject.Contract.csproj" />
     <ProjectReference Include="..\EducationProject.Service\EducationProject.Service.csproj" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <Folder Include="wwwroot\UploadFiles\" />
   </ItemGroup>
 
 </Project>

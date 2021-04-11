@@ -1,0 +1,76 @@
+﻿
+@{
+    //ViewData["Title"] = "AddEducation";
+}
+
+@model EducationProject.Contract.RequestModel.Education.EducationModel
+
+
+<br />
+
+<form asp-formhelper="true" asp-controller="Education" asp-action="AddEducation" method="post" asp-enableButtonAfterSuccess="true">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputEmail4">Education Name</label>
+            <input type="text" class="form-control" id="inputEmail4" asp-for="Name">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputPassword4">Time</label>
+            <input type="number" class="form-control" id="inputPassword4" asp-for="Time" placeholder="Hour">
+            <span asp-validation-for="Time" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputAddress">Cost</label>
+        <input type="number" class="form-control" id="inputAddress" asp-for="Cost">
+
+    </div>
+    <div class="form-group">
+        <label for="inputAddress2">Quota</label>
+        <input type="number" class="form-control" id="inputAddress2" asp-for="Quota">
+        <span asp-validation-for="Quota" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputCity">Category</label>
+            <select class="form-control" asp-for="CategoryId">
+                @if (ViewBag.CategoryList != null)
+                {
+                    @foreach (var item in ViewBag.CategoryList)
+                    {
+                        <option value="@item.Id">@item.Description</option>
+                    }
+                }
+
+
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="inputCity"></label>
+            <select class="form-control" asp-for="EducationInformationId">
+
+                @if (ViewBag.TeacherInformationList != null)
+                {
+                    @foreach (var item in ViewBag.TeacherInformationList)
+                    {
+                        <option value="@item.Id">@item.Description</option>
+                    }
+                }
+
+
+            </select>
+            <span asp-validation-for="EducationInformationId" class="text-danger"></span>
+        </div>
+
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+
+

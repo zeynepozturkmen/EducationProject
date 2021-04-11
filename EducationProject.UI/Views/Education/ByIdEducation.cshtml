@@ -1,0 +1,112 @@
+﻿
+@{
+    //ViewData["Title"] = "ByIdEducation";
+}
+
+@model EducationProject.Contract.ResponseModel.Education.EducationResponseModel
+
+
+
+<form id="addEducationContentForm" enctype="multipart/form-data">
+    <div class="form-row">
+
+        <div class="form-group col-md-6">
+            <label for="inputEmail4">Education Name</label>
+            <input type="text" class="form-control" id="inputEmail4" readonly value="@Model.Name">
+
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="inputPassword4">Upload File</label>
+            <input type="file" class="form-control" id="inputPassword4" name="File" required>
+            <input type="hidden" value="@Model.Id" name="EducationId" />
+        </div>
+       
+
+    </div>
+
+    <div class="form-row">
+
+        <div class="form-group col-md-6">
+            <label for="inputPassword4">Row Number</label>
+            <input type="number" multiple class="form-control" id="inputPassword4" name="RowNumber" required>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="inputCity">Content Type</label>
+            <select class="form-control" required name="EducationContenTypeId">
+                @if (ViewBag.EducationContentTypeList != null)
+                {
+                    @foreach (var item in ViewBag.EducationContentTypeList)
+                    {
+                        <option value="@item.Id">@item.Description</option>
+                    }
+                }
+
+
+            </select>
+        </div>
+
+    </div>
+
+
+    <button type="submit" class="btn btn-success float-right">Kaydet</button>
+</form>
+
+@*<script src="~/CustomScripts/Education/AddEducationContent.js"></script>*@
+
+<div id="partialEducationContent">
+    @await Html.PartialAsync("~/Views/Education/_PartialEducationContentList.cshtml", Model.EducationContentList)
+</div>
+
+<script>
+
+    $("#addEducationContentForm").submit(function (event) {
+        event.preventDefault();
+
+        debugger;
+
+        var formValue = (this);
+
+        swal({
+            text: "Are you sure you want to save the training content",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger m-l-5',
+            buttonsStyling: false
+        }).then(function (willDelete) {
+            if (willDelete) {
+                $.ajax({
+                    method: "POST",
+                    url: "/Education/AddEducationContent",
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: new FormData(formValue),
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+
+                    }
+                }).done(function (d) {
+                    if (d.failed == true) {
+                        toastr.error(d.message, "Hata");
+
+                    } else {
+                        $('#partialEducationContent').html(d);
+                    }
+
+
+                }).always(function () {
+
+                });
+            }
+
+        });
+
+
+
+    });
+</script>

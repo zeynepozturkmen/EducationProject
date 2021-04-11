@@ -14,7 +14,7 @@ namespace EducationProject.Data.DbContexts
     public static class EducationDbSeed
     {
         private static void GetAndAddEnums<TEntity, TEnum>(this DbContext dbContext, bool create,
-      IDictionary<TEnum, Guid> ids) where TEntity : BaseEnum
+           IDictionary<TEnum, Guid> ids) where TEntity : BaseEnum
         {
             foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
             {

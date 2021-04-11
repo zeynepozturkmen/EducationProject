@@ -1,5 +1,8 @@
 using EducationProject.Data.DbContexts;
 using EducationProject.UI.IoC;
+using FluentValidation.AspNetCore;
+using FormHelper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,13 +29,27 @@ namespace EducationProject.UI
         public void ConfigureServices(IServiceCollection services)
         {
             ServiceInjector.Add(services, Configuration);
+            ValidationService.Add(services);
 
             services.AddSession();
             services.AddHttpContextAccessor();
 
+
+
             //sayfayi yenileyince yenilikleri algilamasi icin
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
+
+            services.AddControllersWithViews()
+.AddFluentValidation();
+
+            services.AddFormHelper(new FormHelperConfiguration
+            {
+                CheckTheFormFieldsMessage = "Form alanlarýný kontrol ediniz."
+                //RedirectDelay->Yönlendirme iþlemlerinde beklenecek varsayýlan süre.
+                //ToastrDefaultPosition->Bildirim / Uyarý mesajlarýnýn ekranda görüneceði pozisyon.
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +64,14 @@ namespace EducationProject.UI
                 app.UseExceptionHandler("/Home/Error");
             }
 
+
+            app.UseFormHelper();
+
+            // uygulamanýn varsayýlan dilini Türkçe olarak çalýþmaya zorlamak icin
+            var cultureInfo = new CultureInfo("tr-TR");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
@@ -59,7 +85,7 @@ namespace EducationProject.UI
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
             });
 
             EducationDbSeed.Initialize(app.ApplicationServices, true);

@@ -8,6 +8,14 @@ namespace EducationProject.Core.Constants
 {
     public static partial class Constants
     {
+
+        //kullanıcı rolleri
+        public enum UserType
+        {
+            Admin,
+            User
+        }
+
         public static Dictionary<Category, Guid> CategoryIds { get; set; } = new Dictionary<Category, Guid>();
         public enum Category
         {
@@ -16,7 +24,7 @@ namespace EducationProject.Core.Constants
             [Display(Description = "Kitap")] Book,
             [Display(Description = "Sunum")] Presentation,
             [Display(Description = "Makale")] Article,
-            [Display(Description = "Mini proje")] Project
+            [Display(Description = "Mini proje")] Project,
 
         }
 
@@ -24,7 +32,7 @@ namespace EducationProject.Core.Constants
         public enum TeacherInformation
         {
             [Display(Description = "İç Eğitmen")] InternalTrainer,
-            [Display(Description = "Dış Eğitmen")] ExternalTrainer
+            [Display(Description = "Dış Eğitmen")] ExternalTrainer,
 
         }
 
@@ -32,7 +40,7 @@ namespace EducationProject.Core.Constants
         public enum EducationContentType
         {
             [Display(Description = "Video")] Video,
-            [Display(Description = "Kitap")] Kitap
+            [Display(Description = "Kitap")] Kitap,
 
         }
 
@@ -42,7 +50,7 @@ namespace EducationProject.Core.Constants
             [Display(Description = "Talep")] Request,
             [Display(Description = "Talep iptal")] RequestCancellation,
             [Display(Description = "Onay")] Approval,
-            [Display(Description = "Red")] Rejection
+            [Display(Description = "Red")] Rejection,
 
         }
 

@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EducationProject.Contract\EducationProject.Contract.csproj" />
     <ProjectReference Include="..\EducationProject.Data\EducationProject.Data.csproj" />
   </ItemGroup>
 

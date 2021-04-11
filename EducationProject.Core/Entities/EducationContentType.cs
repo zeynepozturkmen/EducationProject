@@ -8,7 +8,7 @@ namespace EducationProject.Core.Entities
     {
         public EducationContentType(string name, string description) : base(name)
         {
-            description = Description;
+            Description = description;
         }
         public string Description { get; set; }
         public virtual List<EducationContent> EducationContentList { get; set; } = new List<EducationContent>();

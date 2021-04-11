@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationProject.Core", "EducationProject.Core\EducationProject.Core.csproj", "{DA7F6A7E-90CD-4FAE-AEAF-5C4AE55D2E32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationProject.Core", "EducationProject.Core\EducationProject.Core.csproj", "{DA7F6A7E-90CD-4FAE-AEAF-5C4AE55D2E32}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationProject.Data", "EducationProject.Data\EducationProject.Data.csproj", "{20C00C04-44CD-453C-A540-49C5BE47D8F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationProject.Data", "EducationProject.Data\EducationProject.Data.csproj", "{20C00C04-44CD-453C-A540-49C5BE47D8F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationProject.Service", "EducationProject.Service\EducationProject.Service.csproj", "{8BAB698F-471E-4608-9ABC-BF1DE381DCE0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationProject.Service", "EducationProject.Service\EducationProject.Service.csproj", "{8BAB698F-471E-4608-9ABC-BF1DE381DCE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationProject.UI", "EducationProject.UI\EducationProject.UI.csproj", "{840321CA-7D82-46FF-B959-31E0EAAAF303}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EducationProject.UI", "EducationProject.UI\EducationProject.UI.csproj", "{840321CA-7D82-46FF-B959-31E0EAAAF303}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationProject.Contract", "EducationProject.Contract\EducationProject.Contract.csproj", "{F2110A12-78F7-4D71-8E8C-098280BB4444}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{840321CA-7D82-46FF-B959-31E0EAAAF303}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{840321CA-7D82-46FF-B959-31E0EAAAF303}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{840321CA-7D82-46FF-B959-31E0EAAAF303}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2110A12-78F7-4D71-8E8C-098280BB4444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2110A12-78F7-4D71-8E8C-098280BB4444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2110A12-78F7-4D71-8E8C-098280BB4444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2110A12-78F7-4D71-8E8C-098280BB4444}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,8 +1,10 @@
 ﻿using EducationProject.Core.Entities;
 using EducationProject.Data.DbContexts;
 using EducationProject.Service.IService;
+using EducationProject.Service.IServices;
 using EducationProject.Service.IUnitOfWorks;
 using EducationProject.Service.Service;
+using EducationProject.Service.Services;
 using EducationProject.Service.UnitOfWorks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -62,7 +64,8 @@ namespace EducationProject.UI.IoC
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddTransient(typeof(IBaseService<>), typeof(BaseService<>));
-    
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IEducationService, EducationService>();
 
         }
     }
