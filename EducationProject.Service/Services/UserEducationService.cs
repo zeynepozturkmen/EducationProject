@@ -83,7 +83,6 @@ namespace EducationProject.Service.Services
 
             var userEducationList = _dbContext.UserEducation.Where(x => !x.IsDeleted && x.UserId == model.Id && x.UserEducationStatus.Name == Constants.UserEducationStatus.Request.ToString() && !x.IsCompleted).Include(x => x.Education).ThenInclude(x => x.Category).ToList();
 
-
             var resModel = new List<UserEducationResponseModel>();
 
             foreach (var item in userEducationList)
@@ -122,26 +121,28 @@ namespace EducationProject.Service.Services
         {
 
             var userEducation = await _dbContext.UserEducation.Where(x => !x.IsDeleted && x.Id == model.Id).Include
-(x => x.Education).ThenInclude(x=>x.EducationContentList).FirstOrDefaultAsync();
+(x => x.Education).ThenInclude(x => x.EducationContentList).FirstOrDefaultAsync();
 
-            if (userEducation!=null)
+            if (userEducation != null)
             {
                 var content = userEducation.Education.EducationContentList.Where(x => !x.IsDeleted).OrderBy(x => x.RowNumber).FirstOrDefault();
 
-                var contentNext = userEducation.Education.EducationContentList.Where(x => !x.IsDeleted && x.RowNumber > content.RowNumber).OrderBy(x => x.RowNumber).FirstOrDefault();
+                var contentNext = userEducation.Education.EducationContentList.Where(x => !x.IsDeleted && x.RowNumber > content?.RowNumber).OrderBy(x => x.RowNumber).FirstOrDefault();
 
-                var educationContent = content.Adapt<EducationContentResponseModel>();
-
-                educationContent.IsBack = false;
-                if (contentNext != null)
+                if (content!=null)
                 {
-                    educationContent.IsNext = true;
+                    var educationContent = content.Adapt<EducationContentResponseModel>();
+
+                    educationContent.IsBack = false;
+                    if (contentNext != null)
+                    {
+                        educationContent.IsNext = true;
+                    }
+
+                    educationContent.UserEducationId = userEducation.Id;
+
+                    return educationContent;
                 }
-
-                educationContent.UserEducationId = userEducation.Id;
-
-                return educationContent;
-
             }
 
             return null;
@@ -155,7 +156,7 @@ namespace EducationProject.Service.Services
 
             if (userEducation != null)
             {
-                var content = userEducation.Education.EducationContentList.Where(x => !x.IsDeleted && x.RowNumber>userEducation.LastWathedOrderNo).OrderBy(x=>x.RowNumber).FirstOrDefault();
+                var content = userEducation.Education.EducationContentList.Where(x => !x.IsDeleted && x.RowNumber > userEducation.LastWathedOrderNo).OrderBy(x => x.RowNumber).FirstOrDefault();
 
                 var contentBack = userEducation.Education.EducationContentList.Where(x => !x.IsDeleted && x.RowNumber < content?.RowNumber).OrderBy(x => x.RowNumber).FirstOrDefault();
 
@@ -167,7 +168,7 @@ namespace EducationProject.Service.Services
                 {
                     educationContent.IsNext = true;
                 }
-                if (contentBack!=null)
+                if (contentBack != null)
                 {
 
                     educationContent.IsBack = true;
@@ -185,10 +186,10 @@ namespace EducationProject.Service.Services
         }
         public async Task<EducationContentResponseModel> NextByEducationContentId(Guid Id, Guid UserEducationId)
         {
-            var education = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.Id ==Id).Include
+            var education = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.Id == Id).Include
             (x => x.Education).FirstOrDefaultAsync();
 
-            if (education!=null)
+            if (education != null)
             {
                 var content = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.RowNumber > education.RowNumber).OrderBy(x => x.RowNumber).FirstOrDefaultAsync();
 
@@ -202,10 +203,10 @@ namespace EducationProject.Service.Services
                     educationContent.IsNext = true;
                 }
 
-                var userEducation= await _dbContext.UserEducation.Where(x => !x.IsDeleted && x.Id == UserEducationId).Include
+                var userEducation = await _dbContext.UserEducation.Where(x => !x.IsDeleted && x.Id == UserEducationId).Include
             (x => x.Education).FirstOrDefaultAsync();
 
-                if (userEducation!=null)
+                if (userEducation != null)
                 {
                     userEducation.LastWathedOrderNo = education.RowNumber;
                     await _uow.CommitAsync();
@@ -223,12 +224,12 @@ namespace EducationProject.Service.Services
         public async Task<EducationContentResponseModel> BackByEducationContentId(Guid Id, Guid UserEducationId)
         {
 
-            var education = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.Id ==Id).Include
+            var education = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.Id == Id).Include
             (x => x.Education).FirstOrDefaultAsync();
 
             var content = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.RowNumber < education.RowNumber).OrderByDescending(x => x.RowNumber).FirstOrDefaultAsync();
 
-            var contentBack = _dbContext.EducationContent.Where(x => !x.IsDeleted && x.RowNumber< content.RowNumber).OrderByDescending(x => x.RowNumber).FirstOrDefault();
+            var contentBack = _dbContext.EducationContent.Where(x => !x.IsDeleted && x.RowNumber < content.RowNumber).OrderByDescending(x => x.RowNumber).FirstOrDefault();
 
             var educationContent = content.Adapt<EducationContentResponseModel>();
 
@@ -254,9 +255,8 @@ namespace EducationProject.Service.Services
             userEducation.IsCompleted = true;
 
             await _uow.CommitAsync();
-       
-        }
 
+        }
         public async Task TrainingEducation(ByIdRequestModel model)
         {
             var userEducation = await _dbContext.UserEducation.Where(x => !x.IsDeleted && x.Id == model.Id).Include
@@ -268,8 +268,26 @@ namespace EducationProject.Service.Services
             await _uow.CommitAsync();
 
         }
+        public async Task<UserEducationResponseModel> CancelUserEducationAsync(Guid UserEducationId)
+        {
+            var userEducation = await _dbContext.UserEducation.Where(x => x.Id == UserEducationId && !x.IsDeleted).FirstOrDefaultAsync();
+
+            if (userEducation != null)
+            {
+                userEducation.IsDeleted = true;
+
+                var resultValue = await _uow.CommitAsync();
+
+                if (resultValue)
+                {
+                    var resModel = userEducation.Adapt<UserEducationResponseModel>();
+                    return resModel;
+                }
+            }
 
 
+            return null;
+        }
 
     }
 }

@@ -19,44 +19,51 @@
 
 @using EducationProject.Core.Constants
 
-@if (Model.FilePath != null)
-{
-    <video id="myVideo" controls class="myvideo mt-5 ml-5" onended="finish()">
-        <source id="mp4_src" src="/UploadFiles/@Model.FilePath" type="video/mp4">
-    </video>
-}
-
-@if (Model.FilePath == null && Model.BookContent != null)
-{
-    <div class="bookContent">
-        @Html.Raw(Model.BookContent)
-    </div>
-}
-
-
-@if (Model.IsBack)
-{
-    <a onclick="back()" id="backButton" href="/UserEducation/BackEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId" class="btn btn-primary">Back</a>
-}
-@if (Model.IsNext)
+@if (Model != null)
 {
     if (Model.FilePath != null)
     {
-        <a id="finishButton" class="btn btn-primary btn-sm" href="/UserEducation/NextEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId" style="display:none">Next</a>
+        <video id="myVideo" controls class="myvideo mt-5 ml-5" onended="finish()">
+            <source id="mp4_src" src="/UploadFiles/@Model.FilePath" type="video/mp4">
+        </video>
     }
-    else
+
+    @if (Model.FilePath == null && Model.BookContent != null)
     {
-        <a class="btn btn-primary btn-sm" href="/UserEducation/NextEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId">Next</a>
+        <div class="bookContent">
+            @Html.Raw(Model.BookContent)
+        </div>
     }
 
-    <input type="hidden" id="nextInput" value="@Model.IsNext" />
+    @if (Model.IsBack)
+    {
+        <a onclick="back()" id="backButton" href="/UserEducation/BackEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId" class="btn btn-primary">Back</a>
+    }
+    @if (Model.IsNext)
+    {
+        if (Model.FilePath != null)
+        {
+            <a id="finishButton" class="btn btn-primary btn-sm" href="/UserEducation/NextEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId" style="display:none">Next</a>
+        }
+        else
+        {
+            <a class="btn btn-primary btn-sm" href="/UserEducation/NextEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId">Next</a>
+        }
+
+        <input type="hidden" id="nextInput" value="@Model.IsNext" />
+
+    }
+
+    @if (!Model.IsNext)
+    {
+        <a class="btn btn-success btn-sm" href="/UserEducation/CompletedEducation?Id=@Model.UserEducationId">Completed</a>
+    }
 
 }
 
-@if (!Model.IsNext)
-{
-    <a class="btn btn-success btn-sm" href="/UserEducation/CompletedEducation?Id=@Model.UserEducationId">Completed</a>
-}
+
+
+
 
 
 <script>

@@ -46,12 +46,12 @@
                                 {
                                     <a class="btn btn-warning" href="/UserEducation/StartEducationByUserEducationId?Id=@item.Id">Start Education</a>
                                 }
-                                else if(item.LastWathedOrderNo!=null && !item.IsCompleted)
+                                else if (item.LastWathedOrderNo != null && !item.IsCompleted)
                                 {
                                     <a class="btn btn-warning" href="/UserEducation/ContinueEducationByUserEducationId?Id=@item.Id">Continue Education</a>
                                 }
 
-                                <a href="#" class="deleteDriver btn btn-danger " data-id="@item.Id"><i class="fas fa-trash-alt"></i> Cancel Education</a>
+                                <a href="#" class="cancelEducation btn btn-danger " data-id="@item.Id"><i class="fas fa-trash-alt"></i> Cancel Education</a>
 
                             </td>
                         </tr>
@@ -95,9 +95,6 @@
                                 {
                                     <a class="btn btn-warning" href="/UserEducation/TrainingEducation?Id=@item.Id">Get The Training Again</a>
                                 }
-
-                                <a href="#" class="deleteDriver btn btn-danger" data-id="@item.Id"><i class="fas fa-trash-alt"></i> Cancel Education</a>
-
                             </td>
                         </tr>
                     }
@@ -111,3 +108,49 @@
 
 </div>
 
+
+<script>
+    $(".cancelEducation").click(function () {
+
+        var id = $(this).attr("data-id");
+        var closestTR = $(this).closest("tr");
+
+        swal({
+            text: "Are you sure you want to cancel the training?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger m-l-5',
+            buttonsStyling: false
+        }).then(function (willDelete) {
+            if (willDelete) {
+                $.ajax({
+                    url: '/UserEducation/CancelUserEducation?UserEducationId=' + id,
+                    type: 'POST',
+                    success: function (d) {
+                        if (d.failed == false) {
+                            closestTR.fadeOut(1000, function () {
+                                closestTR.remove();
+                            });
+
+                            toastr.success(d.message, "Success");
+                        }
+                        else {
+
+                            toastr.error(d.message, "Error");
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status == 403) {
+                            window.location.href = "/Account/AccessDenied";
+                        }
+                    }
+                });
+            }
+
+        });
+
+    });
+</script>

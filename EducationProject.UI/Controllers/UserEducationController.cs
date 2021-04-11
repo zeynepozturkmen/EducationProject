@@ -73,13 +73,11 @@ namespace EducationProject.UI.Controllers
             var education = await _userEducationService.NextByEducationContentId(Id, UserEducationId);
             return View("EducationContent", education);
         }
-
         public IActionResult EducationContent(EducationContentResponseModel model)
         {
 
             return View(model);
         }
-
         public async Task<IActionResult> ContinueEducationByUserEducationId(ByIdRequestModel model)
         {
 
@@ -87,21 +85,18 @@ namespace EducationProject.UI.Controllers
 
             return View("EducationContent", education);
         }
-
         public async Task<IActionResult> BackEducationContent(Guid Id, Guid UserEducationId)
         {
             var education = await _userEducationService.BackByEducationContentId(Id,UserEducationId);
 
             return View("EducationContent", education);
         }
-
         public async Task<IActionResult> CompletedEducation(ByIdRequestModel model)
         {
             await _userEducationService.CompletedEducation(model);
 
             return RedirectToAction("EducationList");
         }
-
         public async Task<IActionResult> TrainingEducation(ByIdRequestModel model)
         {
             await _userEducationService.TrainingEducation(model);
@@ -109,8 +104,27 @@ namespace EducationProject.UI.Controllers
             return RedirectToAction("EducationList");
         }
 
-        
+        [HttpPost]
+        public async Task<JsonResult> CancelUserEducation(Guid UserEducationId)
+        {
+            if (UserEducationId == Guid.Empty)
+            {
 
+                return Json(new { failed = true, message = "Id is null" });
+            }
+
+            var userEducation = await _userEducationService.CancelUserEducationAsync(UserEducationId);
+
+            if (userEducation != null)
+            {
+
+                return Json(new { failed = false, message = "Deleted education." });
+            }
+            else
+            {
+                return Json(new { failed = true, message = "An error occurred" });
+            }
+        }
 
     }
 }

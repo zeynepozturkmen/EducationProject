@@ -22,5 +22,6 @@ namespace EducationProject.Service.IServices
         Task<EducationContentResponseModel> ContinueEducationByUserEducationId(ByIdRequestModel model);
         Task CompletedEducation(ByIdRequestModel model);
         Task TrainingEducation(ByIdRequestModel model);
+        Task<UserEducationResponseModel> CancelUserEducationAsync(Guid UserEducationId);
     }
 }
