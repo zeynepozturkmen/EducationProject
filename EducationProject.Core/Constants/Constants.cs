@@ -40,7 +40,7 @@ namespace EducationProject.Core.Constants
         public enum EducationContentType
         {
             [Display(Description = "Video")] Video,
-            [Display(Description = "Kitap")] Kitap,
+            [Display(Description = "Kitap")] Book,
 
         }
 
@@ -49,8 +49,6 @@ namespace EducationProject.Core.Constants
         {
             [Display(Description = "Talep")] Request,
             [Display(Description = "Talep iptal")] RequestCancellation,
-            [Display(Description = "Onay")] Approval,
-            [Display(Description = "Red")] Rejection,
 
         }
 

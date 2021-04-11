@@ -40,14 +40,14 @@
                         @item.EducationContenType
                     </td>
                     <td>
-                        @item.FilePath
+                        @item.FilePath?.Substring(36)
                     </td>
                     <td>
                         @item.RowNumber
                     </td>
 
                     <td>
-                   
+                        <a href="#" class="deleteEducationContent btn btn-danger " data-id="@item.Id"><i class="fas fa-trash-alt"></i> Delete</a>
                     </td>
 
                 </tr>
@@ -66,5 +66,49 @@
         $('#myTable').DataTable();
     });
 
+
+    $(".deleteEducationContent").click(function () {
+
+        var id = $(this).attr("data-id");
+        var closestTR = $(this).closest("tr");
+
+        swal({
+            text: "Are you sure you want to delete training content?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger m-l-5',
+            buttonsStyling: false
+        }).then(function (willDelete) {
+            if (willDelete) {
+                $.ajax({
+                    url: '/Education/DeleteEducationContent?EducationContentId=' + id,
+                    type: 'POST',
+                    success: function (d) {
+                        if (d.failed == false) {
+                            closestTR.fadeOut(1000, function () {
+                                closestTR.remove();
+                            });
+
+                            toastr.success(d.message, "Success");
+                        }
+                        else {
+
+                            toastr.error(d.message, "Error");
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status == 403) {
+                            window.location.href = "/Account/AccessDenied";
+                        }
+                    }
+                });
+            }
+
+        });
+
+    });
 
 </script>

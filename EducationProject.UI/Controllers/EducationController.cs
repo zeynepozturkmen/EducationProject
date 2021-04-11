@@ -26,13 +26,12 @@ namespace EducationProject.UI.Controllers
             _educationService = educationService;
             _env = env;
         }
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var list = await _educationService.GetAllEducationAsync();
+            var list = _educationService.GetAllEducation();
 
             return View(list);
         }
-
         public IActionResult AddEducation()
         {
             ViewBag.TeacherInformationList = _educationService.GetAllTeacherInformation();
@@ -45,31 +44,25 @@ namespace EducationProject.UI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddEducation(EducationModel model)
         {
-
             model.UserId = User.Identity.GetUserId();
             var education = await _educationService.CreateEducationAsync(model);
 
             if (education != null)
             {
-                var reqModel = new ByIdRequestModel();
-                reqModel.Id = education.Id;
-
-                return FormResult.CreateSuccessResult("Added education", Url.Action("ByIdEducation", "Education", new { model = reqModel }));
+                return FormResult.CreateSuccessResult("Added education", Url.Action("ByIdEducation", "Education", new { Id = education.Id }));
             }
             else
             {
                 return FormResult.CreateErrorResult("An error occurred");
             }
         }
-
-        public async Task<IActionResult> ByIdEducation(ByIdRequestModel model)
+        public async Task<IActionResult> ByIdEducation(Guid Id)
         {
             ViewBag.EducationContentTypeList = _educationService.GetAllEducationContentType();
 
-            var education = await _educationService.GetEducationByIdAsync(model);
+            var education = await _educationService.GetEducationByIdAsync(Id);
             return View(education);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> AddEducationContent(AddEducationContentRequestModel model)
@@ -79,34 +72,74 @@ namespace EducationProject.UI.Controllers
                 return Json(new { failed = true, message = "Veri boş" });
             }
 
-
-            Guid g = Guid.NewGuid();
-            var fileName = g.ToString() + model.File.FileName;
-            var folderName = "wwwroot\\UploadFiles";
-            var filePath = Path.Combine(_env.ContentRootPath, folderName, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            if (model.File != null)
             {
-                model.File.CopyTo(stream);
+                Guid g = Guid.NewGuid();
+                var fileName = g.ToString() + model.File.FileName;
+                var folderName = "wwwroot\\UploadFiles";
+                var filePath = Path.Combine(_env.ContentRootPath, folderName, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.File.CopyTo(stream);
+                }
+
+                model.FilePath = fileName;
+
             }
 
-
-            var result = new StringBuilder();
-            using (var reader = new StreamReader(model.File.OpenReadStream()))
-            {
-                while (reader.Peek() >= 0)
-                    result.AppendLine(await reader.ReadLineAsync());
-            }
-            var x= result.ToString();
-
-            model.FilePath = fileName;
+            model.UserId = User.Identity.GetUserId();
 
             var educationContent = await _educationService.CreateEducationContentAsync(model);
 
-            return PartialView("~/Views/DriverDocument/_PartialDriverDocumentList.cshtml", educationContent);
+            return PartialView("~/Views/Education/_PartialEducationContentList.cshtml", educationContent);
 
 
         }
 
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteEducationContent(Guid EducationContentId)
+        {
+            if (EducationContentId == Guid.Empty)
+            {
+
+                return Json(new { failed = true, message = "Geçersiz id." });
+            }
+
+            var educationContent = await _educationService.DeleteEducationContentAsync(EducationContentId);
+
+            if (educationContent != null)
+            {
+
+                return Json(new { failed = false, message = "Deleted education content." });
+            }
+            else
+            {
+                return Json(new { failed = true, message = "An error occurred" });
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteEducation(Guid EducationId)
+        {
+            if (EducationId == Guid.Empty)
+            {
+
+                return Json(new { failed = true, message = "Geçersiz id." });
+            }
+
+            var educationContent = await _educationService.DeleteEducationAsync(EducationId);
+
+            if (educationContent != null)
+            {
+
+                return Json(new { failed = false, message = "Deleted education." });
+            }
+            else
+            {
+                return Json(new { failed = true, message = "An error occurred" });
+            }
+        }
     }
 }

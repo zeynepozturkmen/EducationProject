@@ -15,14 +15,16 @@ namespace EducationProject.Service.IServices
 {
     public interface IEducationService : IBaseService<Education>
     {
-        Task<List<EducationResponseModel>> GetAllEducationAsync();
+        List<EducationResponseModel> GetAllEducation();
         Task<EducationResponseModel> CreateEducationAsync(EducationModel model);
         List<TeacherEducationResponseModel> GetAllTeacherInformation();
         List<CategoryResponseModel> GetAllCategory();
-        Task<EducationResponseModel> GetEducationByIdAsync(ByIdRequestModel model);
+        Task<EducationResponseModel> GetEducationByIdAsync(Guid Id);
         List<EducationContentTypeResponseModel> GetAllEducationContentType();
         Task<List<EducationContentResponseModel>> CreateEducationContentAsync(AddEducationContentRequestModel model);
         Task<List<EducationContentResponseModel>> GetAllEducationContentByEducationId(ByIdRequestModel model);
+        Task<EducationContentResponseModel> DeleteEducationContentAsync(Guid EducationContentId);
+        Task<EducationResponseModel> DeleteEducationAsync(Guid EducationId);
 
     }
 }

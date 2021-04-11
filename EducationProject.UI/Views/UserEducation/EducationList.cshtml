@@ -1,0 +1,113 @@
+﻿
+@{
+    //ViewData["Title"] = "EducationList";
+}
+
+@model IEnumerable<EducationProject.Contract.ResponseModel.UserEducation.UserEducationResponseModel>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Received Trainings</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Completed Trainings</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Quota</th>
+                    <th scope="col">Cost</th>
+                    <th scope="col">Category Name</th>
+                    <th scope="col">Transaction</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.EducationResponseModel.Name</td>
+                            <td>@item.EducationResponseModel.Time</td>
+                            <td>@item.EducationResponseModel.Quota</td>
+                            <td>@item.EducationResponseModel.Cost</td>
+                            <td>@item.EducationResponseModel.CategoryName</td>
+
+                            <td>
+
+                                @if (item.LastWathedOrderNo == null && !item.IsCompleted)
+                                {
+                                    <a class="btn btn-warning" href="/UserEducation/StartEducationByUserEducationId?Id=@item.Id">Start Education</a>
+                                }
+                                else if(item.LastWathedOrderNo!=null && !item.IsCompleted)
+                                {
+                                    <a class="btn btn-warning" href="/UserEducation/ContinueEducationByUserEducationId?Id=@item.Id">Continue Education</a>
+                                }
+
+                                <a href="#" class="deleteDriver btn btn-danger " data-id="@item.Id"><i class="fas fa-trash-alt"></i> Cancel Education</a>
+
+                            </td>
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Quota</th>
+                    <th scope="col">Cost</th>
+                    <th scope="col">Category Name</th>
+                    <th scope="col">Transaction</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.CompletedEducationList != null)
+                {
+                    foreach (var item in ViewBag.CompletedEducationList)
+                    {
+                        <tr>
+                            <td>@item.EducationResponseModel.Name</td>
+                            <td>@item.EducationResponseModel.Time</td>
+                            <td>@item.EducationResponseModel.Quota</td>
+                            <td>@item.EducationResponseModel.Cost</td>
+                            <td>@item.EducationResponseModel.CategoryName</td>
+
+                            <td>
+
+                                @if (item.IsCompleted)
+                                {
+                                    <a class="btn btn-warning" href="/UserEducation/TrainingEducation?Id=@item.Id">Get The Training Again</a>
+                                }
+
+                                <a href="#" class="deleteDriver btn btn-danger" data-id="@item.Id"><i class="fas fa-trash-alt"></i> Cancel Education</a>
+
+                            </td>
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+

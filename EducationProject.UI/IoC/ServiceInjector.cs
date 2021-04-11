@@ -66,6 +66,7 @@ namespace EducationProject.UI.IoC
             services.AddTransient(typeof(IBaseService<>), typeof(BaseService<>));
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IEducationService, EducationService>();
+            services.AddTransient<IUserEducationService, UserEducationService>();
 
         }
     }

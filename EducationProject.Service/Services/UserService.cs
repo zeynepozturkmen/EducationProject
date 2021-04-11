@@ -22,7 +22,6 @@ namespace EducationProject.Service.Services
             _userManager = userManager;
             _roleManager = roleManager;
         }
-
         public async Task<User> GetAdminUser()
         {
             var user = await _userManager.FindByNameAsync("admin");
@@ -59,7 +58,5 @@ namespace EducationProject.Service.Services
             return 1;
 
         }
-
-  
     }
 }

@@ -12,5 +12,6 @@ namespace EducationProject.Core.Entities
         public EducationContentType EducationContentType { get; set; }
         public int RowNumber { get; set; }
         public string FilePath { get; set; }
+        public string BookContent { get; set; }
     }
 }

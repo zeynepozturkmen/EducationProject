@@ -11,5 +11,9 @@ namespace EducationProject.Contract.ResponseModel.Education
         public string EducationContenType{ get; set; }
         public int RowNumber { get; set; }
         public string FilePath { get; set; }
+        public string BookContent { get; set; }
+        public bool IsBack { get; set; }
+        public bool IsNext { get; set; }
+        public Guid UserEducationId { get; set; }
     }
 }

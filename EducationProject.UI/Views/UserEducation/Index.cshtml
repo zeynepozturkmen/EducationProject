@@ -1,0 +1,111 @@
+﻿
+@{
+    //ViewData["Title"] = "Index";
+}
+
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" />
+
+<script type="text/javascript" src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+<style>
+
+    input,
+    label {
+        margin: .4rem 0;
+    }
+</style>
+
+
+
+@model IEnumerable<EducationProject.Contract.ResponseModel.Education.EducationResponseModel>
+
+<h3>Education List</h3>
+<br />
+
+<table class="table" id="myTable">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Time</th>
+            <th scope="col">Quota</th>
+            <th scope="col">Total Cost</th>
+            <th scope="col">Category Name</th>
+            <th scope="col">Transaction</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Time</td>
+                    <td>@item.Quota</td>
+                    <td>@item.TotalCost</td>
+                    <td>@item.CategoryName</td>
+
+                    <td>
+                        <button class="btn btn-warning" onclick="requestEducation('@(item.Id)')">Request</button>
+            
+
+                    </td>
+                </tr>
+            }
+        }
+
+
+    </tbody>
+</table>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+
+
+    function requestEducation(Id) {
+
+        swal({
+            text: "Are you sure you want to get the training content",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger m-l-5',
+            buttonsStyling: false
+        }).then(function (willDelete) {
+            if (willDelete) {
+                $.ajax({
+                    method: "GET",
+                    url: "/UserEducation/BuyEducation?Id="+Id,
+                    beforeSend: function () {
+
+                    }
+                }).done(function (d) {
+                    if (d.failed == true) {
+                        toastr.error(d.message, "Error");
+
+                    } else {
+                        toastr.success(d.message, "Success");
+
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 500);
+                    }
+
+
+                }).always(function () {
+
+                });
+            }
+
+        });
+    }
+
+</script>
+

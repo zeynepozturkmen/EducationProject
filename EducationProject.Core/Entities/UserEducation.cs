@@ -12,6 +12,7 @@ namespace EducationProject.Core.Entities
         public Education Education { get; set; }
         public Guid UserEducationStatusId { get; set; }
         public UserEducationStatus UserEducationStatus { get; set; }
+        public int? LastWathedOrderNo { get; set; }
         public bool IsCompleted { get; set; }
 
     }

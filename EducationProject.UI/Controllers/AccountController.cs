@@ -1,4 +1,5 @@
 ﻿using EducationProject.Contract.RequestModel.User;
+using EducationProject.Core.Constants;
 using EducationProject.Core.Entities;
 using EducationProject.Service.IServices;
 using FormHelper;
@@ -98,6 +99,50 @@ namespace EducationProject.UI.Controllers
 
         }
 
+        [AllowAnonymous]
+        [FormValidator]
+        [HttpPost]
+        public async Task<IActionResult> CreateAccount(LoginRequestModel model)
+        {
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null || user.IsDeleted)
+            {
+                User newUser = new User
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FullName = model.Email,
+                    EmailConfirmed=true
+                };
+
+                IdentityResult result = await _userManager.CreateAsync(newUser, model.Password);
+                if (result.Succeeded)
+                {
+
+                    var role = await _roleManager.FindByNameAsync(Constants.UserType.User.ToString());
+
+                    if (role != null)
+                    {
+                        await _userManager.AddToRoleAsync(newUser, role.Name);
+                    }
+
+
+                    return FormResult.CreateSuccessResult("Added user");
+
+
+                }
+                else
+                {
+                    return FormResult.CreateErrorResult("An error occurred");
+                }
+
+            }
+
+            return FormResult.CreateErrorResult("There is such a user");
+
+        }
 
         public IActionResult AccessDenied()
         {

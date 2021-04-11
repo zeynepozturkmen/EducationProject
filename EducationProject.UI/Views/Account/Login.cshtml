@@ -275,13 +275,17 @@
                 <div class="header">
                     <h3 class="hed">Sign In <lighter> or </lighter><span>Sign Up</span></h3>
                 </div>
-                <form class="inputs-cont">
-                    <label class="input-label hidden">FULL NAME </label>
-                    <input type="text" class="input-take" placeholder="Enter your full name" required>
+
+                <form class="inputs-cont" asp-formhelper="true" asp-controller="Account" asp-action="CreateAccount" method="post" asp-enableButtonAfterSuccess="true">
+                    
+
                     <label class="input-label">PASSWORD</label>
-                    <input type="password" class="input-take" placeholder="* * * * * * * *" required maxlength="12">
+                    <input type="password" class="input-take" placeholder="* * * * * * * *" asp-for="Password" maxlength="12">
+                    <span asp-validation-for="Password" class="text-danger"></span>
+
                     <label class="input-label">E-MAIL</label>
-                    <input type="email" class="input-take" placeholder="Your email goes here" required>
+                    <input type="email" class="input-take" placeholder="Your email goes here" asp-for="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
                     <!-- check box -->
                     <br>
 

@@ -1,0 +1,101 @@
+﻿
+@{
+    //ViewData["Title"] = "EducationContent";
+}
+
+@model EducationProject.Contract.ResponseModel.Education.EducationContentResponseModel
+
+<style>
+    div.bookContent {
+        margin: 30px;
+        padding: 5px;
+        width: 800px;
+        height: 500px;
+        overflow: auto;
+        text-align: justify;
+    }
+</style>
+
+
+@using EducationProject.Core.Constants
+
+@if (Model.FilePath != null)
+{
+    <video id="myVideo" controls class="myvideo mt-5 ml-5" onended="finish()">
+        <source id="mp4_src" src="/UploadFiles/@Model.FilePath" type="video/mp4">
+    </video>
+}
+
+@if (Model.FilePath == null && Model.BookContent != null)
+{
+    <div class="bookContent">
+        @Html.Raw(Model.BookContent)
+    </div>
+}
+
+
+@if (Model.IsBack)
+{
+    <a onclick="back()" id="backButton" href="/UserEducation/BackEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId" class="btn btn-primary">Back</a>
+}
+@if (Model.IsNext)
+{
+    if (Model.FilePath != null)
+    {
+        <a id="finishButton" class="btn btn-primary btn-sm" href="/UserEducation/NextEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId" style="display:none">Next</a>
+    }
+    else
+    {
+        <a class="btn btn-primary btn-sm" href="/UserEducation/NextEducationContent?Id=@Model.Id&&UserEducationId=@Model.UserEducationId">Next</a>
+    }
+
+    <input type="hidden" id="nextInput" value="@Model.IsNext" />
+
+}
+
+@if (!Model.IsNext)
+{
+    <a class="btn btn-success btn-sm" href="/UserEducation/CompletedEducation?Id=@Model.UserEducationId">Completed</a>
+}
+
+
+<script>
+    var current = 0;
+    //Video bittiginde ileri butonunun disable olması kaldırılıyor
+    function finish() {
+        debugger;
+
+        var nextInput = $("#nextInput").val();
+
+        if (nextInput) {
+            $("#finishButton").show();
+        }
+        else {
+            $("#finishButton").hide();
+        }
+
+    }
+    var video = document.getElementById('myVideo');
+    var supposedCurrentTime = 0;
+    video.addEventListener('timeupdate', function () {
+        if (!video.seeking) {
+            supposedCurrentTime = video.currentTime;
+        }
+    });
+    // prevent user from seeking
+    video.addEventListener('seeking', function () {
+        // guard agains infinite recursion:
+        // user seeks, seeking is fired, currentTime is modified, seeking is fired, current time is modified, ....
+        var delta = video.currentTime - supposedCurrentTime;
+        if (delta > 0.01) {
+            console.log("Seeking is disabled");
+            video.currentTime = supposedCurrentTime;
+        }
+    });
+    // delete the following event handler if rewind is not required
+    video.addEventListener('ended', function () {
+        // reset state in order to allow for rewind
+        supposedCurrentTime = 0;
+    });
+
+</script>

@@ -4,6 +4,7 @@ using EducationProject.Contract.ResponseModel.Category;
 using EducationProject.Contract.ResponseModel.Education;
 using EducationProject.Contract.ResponseModel.EducationContentType;
 using EducationProject.Contract.ResponseModel.TeacherInformation;
+using EducationProject.Core.Constants;
 using EducationProject.Core.Entities;
 using EducationProject.Data.DbContexts;
 using EducationProject.Service.IService;
@@ -43,30 +44,28 @@ namespace EducationProject.Service.Services
             }
             return null;
         }
-        public async Task<List<EducationResponseModel>> GetAllEducationAsync()
+        public List<EducationResponseModel> GetAllEducation()
         {
+            var list = _dbContext.Education.Where(x => !x.IsDeleted).Include(x => x.Category).ToList();
 
-            var list = await GetAllAsync();
-
-            var model = new List<EducationResponseModel>();
-
-            model = list.Select(item => item.Adapt<EducationResponseModel>()).ToList();
+            var model = list.Select(item => item.Adapt<EducationResponseModel>()).ToList();
 
             return model;
 
         }
-        public async Task<EducationResponseModel> GetEducationByIdAsync(ByIdRequestModel model)
+        public async Task<EducationResponseModel> GetEducationByIdAsync(Guid Id)
         {
 
-            var education = await _dbContext.Education.Where(x => !x.IsDeleted && x.Id == model.Id).Include(x => x.EducationContentList).FirstOrDefaultAsync();
+            var education = await _dbContext.Education.Where(x => !x.IsDeleted && x.Id == Id).Include(x => x.EducationContentList).FirstOrDefaultAsync();
 
             var resModel = education.Adapt<EducationResponseModel>();
 
-            if (education.EducationContentList.Count>0)
+            if (education.EducationContentList.Count>0 && education!=null)
             {
-
                 resModel.EducationContentList = education.EducationContentList.Select(item => item.Adapt<EducationContentResponseModel>()).ToList();
             }
+
+           
 
             return resModel;
 
@@ -109,7 +108,7 @@ namespace EducationProject.Service.Services
         }
         public async Task<List<EducationContentResponseModel>> GetAllEducationContentByEducationId(ByIdRequestModel model)
         {
-            var educationContentList = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.EducationId == model.Id).Include(x => x.EducationContentType).ToListAsync();
+            var educationContentList = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.EducationId == model.Id).Include(x => x.EducationContentType).OrderBy(x=>x.RowNumber).ToListAsync();
 
             var resModel = educationContentList.Select(item => item.Adapt<EducationContentResponseModel>()).ToList();
 
@@ -120,20 +119,90 @@ namespace EducationProject.Service.Services
             var educationContent = model.Adapt<EducationContent>();
             educationContent.RecordUserId = model.UserId.Value;
 
-            await _dbContext.EducationContent.AddAsync(educationContent);
+            var educationContentTypeName = model.EducationContenType.ToString();
 
-            var resultValue = await _uow.CommitAsync();
+            var educationContentType = await _dbContext.EducationContentType.Where(x => x.Name == educationContentTypeName && !x.IsDeleted).FirstOrDefaultAsync();
 
-            if (resultValue)
+            if (educationContentType != null)
             {
-                var reqModel = new ByIdRequestModel();
-                reqModel.Id = educationContent.EducationId;
+                educationContent.EducationContentType = educationContentType;
 
-                var resModel = await GetAllEducationContentByEducationId(reqModel);
-                return resModel;
+                await _dbContext.EducationContent.AddAsync(educationContent);
+
+                var resultValue = await _uow.CommitAsync();
+
+                if (resultValue)
+                {
+                    var reqModel = new ByIdRequestModel();
+                    reqModel.Id = educationContent.EducationId;
+
+                    var resModel = await GetAllEducationContentByEducationId(reqModel);
+                    return resModel;
+                }
+
             }
+
+
+
             return null;
         }
+
+        public async Task<EducationContentResponseModel> DeleteEducationContentAsync(Guid EducationContentId)
+        {
+            var educationContent = await _dbContext.EducationContent.Where(x => x.Id == EducationContentId && !x.IsDeleted).FirstOrDefaultAsync();
+
+            if (educationContent!=null)
+            {
+                educationContent.IsDeleted = true;
+
+                var resultValue = await _uow.CommitAsync();
+
+                if (resultValue)
+                {
+                    var resModel = educationContent.Adapt<EducationContentResponseModel>();
+                    return resModel;
+                }
+            }
+
+
+            return null;
+        }
+
+        public async Task<EducationResponseModel> DeleteEducationAsync(Guid EducationId)
+        {
+            var education = await _dbContext.Education.Where(x => x.Id == EducationId && !x.IsDeleted).Include(x=>x.EducationContentList).FirstOrDefaultAsync();
+
+
+            if (education != null)
+            {
+                education.IsDeleted = true;
+
+                var userEducation = await _dbContext.UserEducation.Where(x => x.EducationId == education.Id && !x.IsDeleted).ToListAsync();
+
+                foreach (var item in userEducation)
+                {
+                    item.IsDeleted = true;
+                }
+
+                foreach (var item in education.EducationContentList)
+                {
+                    item.IsDeleted = true;
+
+                }
+
+                var resultValue = await _uow.CommitAsync();
+
+                if (resultValue)
+                {
+                    var resModel = education.Adapt<EducationResponseModel>();
+                    return resModel;
+                }
+            }
+
+
+            return null;
+        }
+        
 
     }
 }
