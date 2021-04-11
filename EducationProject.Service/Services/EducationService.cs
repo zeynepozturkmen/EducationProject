@@ -60,12 +60,12 @@ namespace EducationProject.Service.Services
 
             var resModel = education.Adapt<EducationResponseModel>();
 
-            if (education.EducationContentList.Count>0 && education!=null)
+            if (education.EducationContentList.Count > 0 && education != null)
             {
                 resModel.EducationContentList = education.EducationContentList.Select(item => item.Adapt<EducationContentResponseModel>()).ToList();
             }
 
-           
+
 
             return resModel;
 
@@ -108,7 +108,7 @@ namespace EducationProject.Service.Services
         }
         public async Task<List<EducationContentResponseModel>> GetAllEducationContentByEducationId(ByIdRequestModel model)
         {
-            var educationContentList = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.EducationId == model.Id).Include(x => x.EducationContentType).OrderBy(x=>x.RowNumber).ToListAsync();
+            var educationContentList = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.EducationId == model.Id).Include(x => x.EducationContentType).OrderBy(x => x.RowNumber).ToListAsync();
 
             var resModel = educationContentList.Select(item => item.Adapt<EducationContentResponseModel>()).ToList();
 
@@ -146,12 +146,11 @@ namespace EducationProject.Service.Services
 
             return null;
         }
-
         public async Task<EducationContentResponseModel> DeleteEducationContentAsync(Guid EducationContentId)
         {
             var educationContent = await _dbContext.EducationContent.Where(x => x.Id == EducationContentId && !x.IsDeleted).FirstOrDefaultAsync();
 
-            if (educationContent!=null)
+            if (educationContent != null)
             {
                 educationContent.IsDeleted = true;
 
@@ -167,10 +166,9 @@ namespace EducationProject.Service.Services
 
             return null;
         }
-
         public async Task<EducationResponseModel> DeleteEducationAsync(Guid EducationId)
         {
-            var education = await _dbContext.Education.Where(x => x.Id == EducationId && !x.IsDeleted).Include(x=>x.EducationContentList).FirstOrDefaultAsync();
+            var education = await _dbContext.Education.Where(x => x.Id == EducationId && !x.IsDeleted).Include(x => x.EducationContentList).FirstOrDefaultAsync();
 
 
             if (education != null)
@@ -202,7 +200,35 @@ namespace EducationProject.Service.Services
 
             return null;
         }
-        
+        public async Task<UpdateEducationRequestModel> GetEducationModelByIdAsync(Guid Id)
+        {
+            var education = await _dbContext.Education.Where(x => !x.IsDeleted && x.Id == Id).FirstOrDefaultAsync();
 
+            var resModel = education.Adapt<UpdateEducationRequestModel>();
+
+            return resModel;
+
+        }
+        public async Task<EducationResponseModel> UpdateEducationAsync(UpdateEducationRequestModel model)
+        {
+            var findEducation = await _dbContext.Education.Where(x => x.Id == model.Id && !x.IsDeleted).FirstOrDefaultAsync();
+
+            if (findEducation!=null)
+            {
+                findEducation = model.Adapt(findEducation);
+                findEducation.UpdateUserId = model.UserId.Value;
+
+                var resultValue = await _uow.CommitAsync();
+
+                if (resultValue)
+                {
+                    var resModel = findEducation.Adapt<EducationResponseModel>();
+                    return resModel;
+                }
+            }
+
+          
+            return null;
+        }
     }
 }

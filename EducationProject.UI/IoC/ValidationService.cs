@@ -13,6 +13,7 @@ namespace EducationProject.UI.IoC
         {
             services.AddTransient<IValidator<LoginRequestModel>, UserLoginValidator>();
             services.AddTransient<IValidator<EducationModel>, EducationValidator>();
+            services.AddTransient<IValidator<UpdateEducationRequestModel>, UpdateEducationValidator>();
         }
     }
 }

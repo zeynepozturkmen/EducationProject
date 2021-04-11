@@ -63,6 +63,32 @@ namespace EducationProject.UI.Controllers
             var education = await _educationService.GetEducationByIdAsync(Id);
             return View(education);
         }
+        public async Task<IActionResult> UpdateEducation(Guid Id)
+        {
+            ViewBag.TeacherInformationList = _educationService.GetAllTeacherInformation();
+            ViewBag.CategoryList = _educationService.GetAllCategory();
+
+            var education = await _educationService.GetEducationModelByIdAsync(Id);
+            return View(education);
+
+        }
+
+        [FormValidator]
+        [HttpPost]
+        public async Task<IActionResult> UpdateEducation(UpdateEducationRequestModel model)
+        {
+            model.UserId = User.Identity.GetUserId();
+            var education = await _educationService.UpdateEducationAsync(model);
+
+            if (education != null)
+            {
+                return FormResult.CreateSuccessResult("Updated education", Url.Action("UpdateEducation", "Education", new { Id = education.Id }));
+            }
+            else
+            {
+                return FormResult.CreateErrorResult("An error occurred");
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> AddEducationContent(AddEducationContentRequestModel model)
@@ -96,7 +122,6 @@ namespace EducationProject.UI.Controllers
 
 
         }
-
 
         [HttpPost]
         public async Task<JsonResult> DeleteEducationContent(Guid EducationContentId)

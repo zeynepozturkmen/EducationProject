@@ -25,6 +25,8 @@ namespace EducationProject.Service.IServices
         Task<List<EducationContentResponseModel>> GetAllEducationContentByEducationId(ByIdRequestModel model);
         Task<EducationContentResponseModel> DeleteEducationContentAsync(Guid EducationContentId);
         Task<EducationResponseModel> DeleteEducationAsync(Guid EducationId);
+        Task<UpdateEducationRequestModel> GetEducationModelByIdAsync(Guid Id);
+        Task<EducationResponseModel> UpdateEducationAsync(UpdateEducationRequestModel model);
 
     }
 }
