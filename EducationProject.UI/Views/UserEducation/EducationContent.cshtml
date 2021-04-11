@@ -26,6 +26,12 @@
         <video id="myVideo" controls class="myvideo mt-5 ml-5" onended="finish()">
             <source id="mp4_src" src="/UploadFiles/@Model.FilePath" type="video/mp4">
         </video>
+
+        @if (!Model.IsNext)
+        {
+            <button class="btn btn-success btn-sm" onclick="completedEducation('@(Model.UserEducationId)')" disabled id="completedEducation">Completed</button>
+        }
+
     }
 
     @if (Model.FilePath == null && Model.BookContent != null)
@@ -33,6 +39,12 @@
         <div class="bookContent">
             @Html.Raw(Model.BookContent)
         </div>
+
+        @if (!Model.IsNext)
+        {
+            <button class="btn btn-success btn-sm" onclick="completedEducation('@(Model.UserEducationId)')">Completed</button>
+        }
+
     }
 
     @if (Model.IsBack)
@@ -54,10 +66,7 @@
 
     }
 
-    @if (!Model.IsNext)
-    {
-        <a class="btn btn-success btn-sm" href="/UserEducation/CompletedEducation?Id=@Model.UserEducationId">Completed</a>
-    }
+
 
 }
 
@@ -79,6 +88,7 @@
         }
         else {
             $("#finishButton").hide();
+            $('#completedEducation').prop("disabled", false);
         }
 
     }
@@ -104,5 +114,47 @@
         // reset state in order to allow for rewind
         supposedCurrentTime = 0;
     });
+
+
+    function completedEducation(UserEducationId) {
+        swal({
+            text: "Are you sure you want to finish the training?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Evet',
+            cancelButtonText: 'Hayır',
+            confirmButtonClass: 'btn btn-success',
+            cancelButtonClass: 'btn btn-danger m-l-5',
+            buttonsStyling: false
+        }).then(function (willDelete) {
+            if (willDelete) {
+                $.ajax({
+                    url: '/UserEducation/CompletedEducation?Id=' + UserEducationId,
+                    type: 'POST',
+                    success: function (d) {
+                        if (d.failed == false) {
+                            toastr.success(d.message, "Success");
+
+                            setTimeout(function () {
+                                window.location.href="/UserEducation/EducationList"
+                            }, 500);
+                        }
+                        else {
+
+                            toastr.error(d.message, "Error");
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status == 403) {
+                            window.location.href = "/Account/AccessDenied";
+                        }
+                    }
+                });
+            }
+
+        });
+    }
+
+
 
 </script>

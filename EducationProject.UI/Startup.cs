@@ -45,7 +45,7 @@ namespace EducationProject.UI
 
             services.AddFormHelper(new FormHelperConfiguration
             {
-                CheckTheFormFieldsMessage = "Form alanlarýný kontrol ediniz."
+                CheckTheFormFieldsMessage = "Check the form fields."
                 //RedirectDelay->Yönlendirme iþlemlerinde beklenecek varsayýlan süre.
                 //ToastrDefaultPosition->Bildirim / Uyarý mesajlarýnýn ekranda görüneceði pozisyon.
             });

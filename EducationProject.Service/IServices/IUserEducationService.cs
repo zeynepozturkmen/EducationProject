@@ -20,7 +20,7 @@ namespace EducationProject.Service.IServices
         Task<EducationContentResponseModel> NextByEducationContentId(Guid Id, Guid UserEducationId);
         Task<EducationContentResponseModel> BackByEducationContentId(Guid Id, Guid UserEducationId);
         Task<EducationContentResponseModel> ContinueEducationByUserEducationId(ByIdRequestModel model);
-        Task CompletedEducation(ByIdRequestModel model);
+        Task CompletedEducation(Guid Id);
         Task TrainingEducation(ByIdRequestModel model);
         Task<UserEducationResponseModel> CancelUserEducationAsync(Guid UserEducationId);
     }

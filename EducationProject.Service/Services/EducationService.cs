@@ -56,16 +56,27 @@ namespace EducationProject.Service.Services
         public async Task<EducationResponseModel> GetEducationByIdAsync(Guid Id)
         {
 
-            var education = await _dbContext.Education.Where(x => !x.IsDeleted && x.Id == Id).Include(x => x.EducationContentList).FirstOrDefaultAsync();
+            var education = await _dbContext.Education.Where(x => !x.IsDeleted && x.Id == Id).Include(x=>x.Category).Include(x => x.EducationContentList).FirstOrDefaultAsync();
 
-            var resModel = education.Adapt<EducationResponseModel>();
+            var resModel = new EducationResponseModel();
 
-            if (education.EducationContentList.Count > 0 && education != null)
+            if (education != null)
             {
-                resModel.EducationContentList = education.EducationContentList.Select(item => item.Adapt<EducationContentResponseModel>()).ToList();
+                foreach (var item in education.EducationContentList.Where(x=>!x.IsDeleted).ToList())
+                {
+                    var md = item.Adapt<EducationContentResponseModel>();
+                    md.EducationContenTypeName = item.EducationContentType.Description;
+                    resModel.EducationContentList.Add(md);
+                }
+
+                resModel.CategoryName = education.Category?.Description;
+                resModel.Cost = education.Cost;
+                resModel.Time = education.Time;
+                resModel.Quota = education.Quota;
+                resModel.Id = education.Id;
+                resModel.Name = education.Name;
+                resModel.TotalCost = education.TotalCost;
             }
-
-
 
             return resModel;
 
@@ -213,7 +224,7 @@ namespace EducationProject.Service.Services
         {
             var findEducation = await _dbContext.Education.Where(x => x.Id == model.Id && !x.IsDeleted).FirstOrDefaultAsync();
 
-            if (findEducation!=null)
+            if (findEducation != null)
             {
                 findEducation = model.Adapt(findEducation);
                 findEducation.UpdateUserId = model.UserId.Value;
@@ -227,7 +238,7 @@ namespace EducationProject.Service.Services
                 }
             }
 
-          
+
             return null;
         }
     }

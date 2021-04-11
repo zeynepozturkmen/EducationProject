@@ -91,11 +91,16 @@ namespace EducationProject.UI.Controllers
 
             return View("EducationContent", education);
         }
-        public async Task<IActionResult> CompletedEducation(ByIdRequestModel model)
+        public async Task<IActionResult> CompletedEducation(Guid Id)
         {
-            await _userEducationService.CompletedEducation(model);
+            if (Id==Guid.Empty)
+            {
+                return Json(new { failed = true, message = "Id is null" });
+            }
 
-            return RedirectToAction("EducationList");
+            await _userEducationService.CompletedEducation(Id);
+
+            return Json(new { failed = false, message = "Completed education." });
         }
         public async Task<IActionResult> TrainingEducation(ByIdRequestModel model)
         {

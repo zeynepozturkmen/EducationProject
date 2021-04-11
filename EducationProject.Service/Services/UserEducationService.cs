@@ -247,9 +247,9 @@ namespace EducationProject.Service.Services
             return educationContent;
 
         }
-        public async Task CompletedEducation(ByIdRequestModel model)
+        public async Task CompletedEducation(Guid Id)
         {
-            var userEducation = await _dbContext.UserEducation.Where(x => !x.IsDeleted && x.Id == model.Id).Include
+            var userEducation = await _dbContext.UserEducation.Where(x => !x.IsDeleted && x.Id == Id).Include
             (x => x.Education).FirstOrDefaultAsync();
 
             userEducation.IsCompleted = true;

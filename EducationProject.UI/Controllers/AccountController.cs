@@ -153,7 +153,6 @@ namespace EducationProject.UI.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            HttpContext.Session.Clear();
             return RedirectToAction("Login", "Account");
 
         }

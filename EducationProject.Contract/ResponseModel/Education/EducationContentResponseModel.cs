@@ -8,7 +8,7 @@ namespace EducationProject.Contract.ResponseModel.Education
     {
         public Guid Id { get; set; }
         public Guid EducationId { get; set; }
-        public string EducationContenType{ get; set; }
+        public string EducationContenTypeName{ get; set; }
         public int RowNumber { get; set; }
         public string FilePath { get; set; }
         public string BookContent { get; set; }
