@@ -47,6 +47,8 @@
                     </td>
 
                     <td>
+                        <button type="button" onclick="educationContentShow('@item.Id')" class="btn btn-info"><i class="fas fa-trash-alt"></i> Preview</button>
+
                         <a href="#" class="deleteEducationContent btn btn-danger " data-id="@item.Id"><i class="fas fa-trash-alt"></i> Delete</a>
                     </td>
 
@@ -59,9 +61,59 @@
 </table>
 
 
+<div class="modal fade" id="educationContent" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="exampleModalLabel">Education Content</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="educationContentModal">
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 <script>
+
+    function educationContentShow(Id) {
+
+        debugger;
+
+        $.ajax({
+            method: "GET",
+            url: "/Education/PreviewEducationContent?Id=" + Id,
+            //dataType: 'json',
+            beforeSend: function () {
+
+            }
+        }).done(function (d) {
+
+            if (d.failed == true) {
+                toastr.error(d.message, "Hata");
+
+            }
+            else {
+                $('#educationContent').modal('show');
+                $('#educationContentModal').html(d);
+            }
+
+        }).fail(function (xhr) {
+            if (xhr.status == 403) {
+                window.location.href = "/Account/AccessDenied";
+            }
+        }).always(function () {
+
+        });
+
+    }
+
+
     $(document).ready(function () {
         $('#myTable').DataTable();
     });

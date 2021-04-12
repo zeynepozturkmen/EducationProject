@@ -1,0 +1,46 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+
+@model EducationProject.Contract.ResponseModel.Education.EducationContentResponseModel
+@using EducationProject.Core.Constants
+
+
+<style>
+    div.bookContent {
+        margin: 30px;
+        padding: 5px;
+        width: 700px;
+        height: 300px;
+        overflow: auto;
+        text-align: justify;
+    }
+</style>
+
+
+@if (Model != null)
+{
+
+    <label>Sıra Numarası= <b>@Model.RowNumber</b></label>
+
+
+    @if (@Model.EducationContenTypeName == Constants.EducationContentType.Video.ToString())
+    {
+
+        <video id="myVideo" controls class="myvideo mt-5 ml-5" onended="finish()">
+            <source id="mp4_src" src="/UploadFiles/@Model.FilePath" type="video/mp4">
+        </video>
+
+    }
+
+    @if (@Model.EducationContenTypeName == Constants.EducationContentType.Book.ToString())
+    {
+        <div class="bookContent">
+            @Html.Raw(Model.BookContent)
+        </div>
+
+    }
+
+}
+

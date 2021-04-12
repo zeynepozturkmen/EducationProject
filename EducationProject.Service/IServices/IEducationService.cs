@@ -27,6 +27,7 @@ namespace EducationProject.Service.IServices
         Task<EducationResponseModel> DeleteEducationAsync(Guid EducationId);
         Task<UpdateEducationRequestModel> GetEducationModelByIdAsync(Guid Id);
         Task<EducationResponseModel> UpdateEducationAsync(UpdateEducationRequestModel model);
+        Task<EducationContentResponseModel> GetEducationContentByIdAsync(Guid Id);
 
     }
 }

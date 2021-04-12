@@ -44,7 +44,7 @@ namespace EducationProject.UI.Controllers
                 {
                     UserName = "admin",
                     FullName = "Admin",
-                    Email = "admin@gmail.com",
+                    Email = "ozgur.bassullu@yaz.com.tr",
                     EmailConfirmed = true,
                 };
 

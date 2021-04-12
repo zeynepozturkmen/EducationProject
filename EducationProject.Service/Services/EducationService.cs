@@ -241,5 +241,21 @@ namespace EducationProject.Service.Services
 
             return null;
         }
+        public async Task<EducationContentResponseModel> GetEducationContentByIdAsync(Guid Id)
+        {
+
+            var educationContent = await _dbContext.EducationContent.Where(x => !x.IsDeleted && x.Id == Id).Include(x => x.EducationContentType).FirstOrDefaultAsync();
+
+            if (educationContent != null)
+            {
+                var resModel = educationContent.Adapt<EducationContentResponseModel>();
+                resModel.EducationContenTypeName = educationContent.EducationContentType.Name;
+
+                return resModel;
+            }
+
+            return null;
+
+        }
     }
 }

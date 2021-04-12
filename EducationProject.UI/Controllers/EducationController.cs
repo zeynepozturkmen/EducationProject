@@ -166,5 +166,25 @@ namespace EducationProject.UI.Controllers
                 return Json(new { failed = true, message = "An error occurred" });
             }
         }
+
+        public async Task<IActionResult> PreviewEducationContent(Guid Id)
+        {
+            if (Id == Guid.Empty)
+            {
+                return Json(new { failed = true, message = "Id is null" });
+            }
+
+            var ecucationContent =await _educationService.GetEducationContentByIdAsync(Id);
+            if (ecucationContent != null)
+            {
+                return PartialView("~/Views/Education/_PartialPreviewEducationContent.cshtml", ecucationContent);
+            }
+            else
+            {
+                return Json(new { failed = true, message = "An error occured" });
+            }
+
+
+        }
     }
 }
